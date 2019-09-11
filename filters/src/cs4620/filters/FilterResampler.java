@@ -8,7 +8,17 @@ package cs4620.filters;
  * 
  * @author srm
  * @author rc844
- * @author Your Name(s) Here
+ * @author zc422
+ *
+ * warm up:
+ * 1. Nearest Neighbor:
+ *      dst[1,1] = 1 * src[3,4] = 1.0
+ *      dst[1,3] = 1 * src[3,5] = 0
+ * 2. Linear interpolation:
+ *      dst[0,3] = 0.0768 * src[3,4] = 0.0768                 get 0.0768 because (0.0768 = 0.12*0.64)
+ *      dst[1,1] =
+ *      dst[1,2] = 0.528 * src[3,4] + 0.072 * src[4,4] = 0.6
+ * 3.
  */
 public class FilterResampler implements ResampleEngine {
 
