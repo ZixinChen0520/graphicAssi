@@ -25,6 +25,22 @@ public class FilterResampler implements ResampleEngine {
     @Override
     public void resample(SimpleImage src, SimpleImage dst, double left, double bottom, double right, double top) {
         // TODO upsample(interpolate) and downsample image with arbitrary filter
+        int dstWidth = dst.getWidth();
+        int dstHeight = dst.getHeight();
+        int srcWidth = src.getWidth();
+        int srcHeight = src.getHeight();
+        int filterSize = (int)(2 * filter.radius());
+        int iSrc,jSrc,mflt,nflt,k;
+
+        for (iSrc = 0; iSrc < srcWidth; iSrc++){
+            for (jSrc = 0; jSrc < srcHeight; jSrc++){
+                float [] filter_temp = new float[filterSize];
+                for (mflt = 0; mflt < filterSize; mflt++){
+
+                }
+            }
+        }
+
 
     }
 
