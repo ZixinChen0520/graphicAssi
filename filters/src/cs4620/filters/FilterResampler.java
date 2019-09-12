@@ -85,14 +85,48 @@ public class FilterResampler implements ResampleEngine {
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();
         int filterSize = (int)(2 * filter.radius());
-        int iSrc,jSrc,mflt,nflt,k;
+        int iDst,jDst,mflt,nflt,kflt;
+        float tempX0 = 0F;
+        float tempX1 = 0F;
+        float tempX2 = 0F;
+        float tempY0 = 0F;
+        float tempY1 = 0F;
+        float tempY2 = 0F;
 
-        for (iSrc = 0; iSrc < srcWidth; iSrc++){
-            for (jSrc = 0; jSrc < srcHeight; jSrc++){
-                float [] filter_temp = new float[filterSize];
+        for (iDst = 0; iDst < dstWidth; iDst++){
+            for (jDst = 0; jDst < dstHeight; jDst++){
+                float [] filterResultTemp0 = new float[filterSize];
+                float [] filterResultTemp1 = new float[filterSize];
+                float [] filterResultTemp2 = new float[filterSize];
                 for (mflt = 0; mflt < filterSize; mflt++){
-
+                    tempX0 = 0F; tempX1 = 0F; tempX2 = 0F;
+                    for (nflt = 0; mflt < filterSize; nflt++){
+                        tempX0 += filter.evaluate((float) (Math.ceil(left + iDst - filter.radius() + nflt) - left - iDst))
+                                * src.getPixel((int)(Math.ceil(left + iDst - filter.radius()) + nflt), (int)(Math.ceil(bottom + jDst - filter.radius() + mflt)), 0);
+                        tempX1 += filter.evaluate((float) (Math.ceil(left + iDst - filter.radius() + nflt) - left - iDst))
+                                * src.getPixel((int)(Math.ceil(left + iDst - filter.radius()) + nflt), (int)(Math.ceil(bottom + jDst - filter.radius() + mflt)), 1);
+                        tempX2 += filter.evaluate((float) (Math.ceil(left + iDst - filter.radius() + nflt) - left - iDst))
+                                * src.getPixel((int)(Math.ceil(left + iDst - filter.radius()) + nflt), (int)(Math.ceil(bottom + jDst - filter.radius() + mflt)), 2);
+                    }
+                    filterResultTemp0[mflt] = tempX0;
+                    filterResultTemp1[mflt] = tempX1;
+                    filterResultTemp2[mflt] = tempX2;
                 }
+                tempY0 = 0F;
+                tempY1 = 0F;
+                tempY2 = 0F;
+                for  (kflt = 0; kflt < filterSize; kflt++){
+                    tempY0 += filter.evaluate(filter.radius() + kflt)
+                            * filterResultTemp0[kflt];
+                    tempY1 += filter.evaluate(filter.radius() + kflt)
+                            * filterResultTemp1[kflt];
+                    tempY2 += filter.evaluate(filter.radius() + kflt)
+                            * filterResultTemp2[kflt];
+                }
+                dst.setPixel(iDst, jDst,0, (byte)tempY0);
+                dst.setPixel(iDst, jDst,0, (byte)tempY1);
+                dst.setPixel(iDst, jDst,0, (byte)tempY2);
+
             }
         }
     }
