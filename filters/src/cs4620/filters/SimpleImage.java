@@ -58,7 +58,8 @@ public class SimpleImage {
      */    
     public byte getPixel(int ix, int iy, int c) {
     	//TODO getPixel
-        return 0;
+        return this.data[c + 3 * (ix + this.width*iy)];
+        //return 0;
     }
 
     /**
@@ -71,6 +72,7 @@ public class SimpleImage {
      */
     public void setPixel(int ix, int iy, int c, byte val) {
     	//TODO setPixel
+        this.data[c + 3*(ix + this.width*iy)] = val;
     }
 
 
