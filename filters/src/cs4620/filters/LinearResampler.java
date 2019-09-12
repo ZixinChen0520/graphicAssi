@@ -12,6 +12,8 @@ public class LinearResampler implements ResampleEngine {
     @Override
     public void resample(SimpleImage src, SimpleImage dst, double left, double bottom, double right, double top) {
     	// TODO implement linear interpolation
+
+
     }
 
 }
