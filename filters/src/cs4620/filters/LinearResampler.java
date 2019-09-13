@@ -42,12 +42,15 @@ public class LinearResampler implements ResampleEngine {
                 double leftCeilWeight = (Math.floor(xPos + 1) - xPos) * (yPos - Math.floor(yPos));
                 double rightCeilWeight = (xPos - Math.floor(xPos)) * (yPos - Math.floor(yPos));
 
-                byte value0 = (byte) (leftBottom0 * leftBottomWeight + rightBottom0 * rightBottomWeight + leftCeil0 * leftCeilWeight + rightCeil0 * rightCeilWeight);
-                byte value1 = (byte) (leftBottom1 * leftBottomWeight + rightBottom1 * rightBottomWeight + leftCeil1 * leftCeilWeight + rightCeil1 * rightCeilWeight);
-                byte value2 = (byte) (leftBottom2 * leftBottomWeight + rightBottom2 * rightBottomWeight + leftCeil2 * leftCeilWeight + rightCeil2 * rightCeilWeight);
-                dst.setPixel(ixDst, iyDst, 0, value0);
-                dst.setPixel(ixDst, iyDst, 1, value1);
-                dst.setPixel(ixDst, iyDst, 2, value2);
+                double value0 = (leftBottom0 * leftBottomWeight + rightBottom0 * rightBottomWeight + leftCeil0 * leftCeilWeight + rightCeil0 * rightCeilWeight);
+                double value1 = (leftBottom1 * leftBottomWeight + rightBottom1 * rightBottomWeight + leftCeil1 * leftCeilWeight + rightCeil1 * rightCeilWeight);
+                double value2 = (leftBottom2 * leftBottomWeight + rightBottom2 * rightBottomWeight + leftCeil2 * leftCeilWeight + rightCeil2 * rightCeilWeight);
+                value0 = Math.min(255, Math.max(0, value0));
+                value1 = Math.min(255, Math.max(0, value1));
+                value2 = Math.min(255, Math.max(0, value2));
+                dst.setPixel(ixDst, iyDst, 0, (byte) value0);
+                dst.setPixel(ixDst, iyDst, 1, (byte) value1);
+                dst.setPixel(ixDst, iyDst, 2, (byte) value2);
             }
         }
 

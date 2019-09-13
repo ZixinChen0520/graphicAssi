@@ -2,14 +2,14 @@ package cs4620.filters;
 
 /**
  * A resampler that uses an arbitrary separable filter.  Resampling is done using the 2D filter
- *    f(x) f(y)
+ * f(x) f(y)
  * where f is the provided 1D filter.  This class will use appropriately sized filters for both
  * magnification and minification.
- * 
+ *
  * @author srm
  * @author rc844
  * @author zc422
- *
+ * <p>
  * warm up:
  * 1. Nearest Neighbor:
  * dst[0,0] = 1 * src[3,3] = 1
@@ -71,6 +71,7 @@ public class FilterResampler implements ResampleEngine {
 
     /**
      * A new instance that uses the provided filter
+     *
      * @param filter
      */
     FilterResampler(Filter filter) {
@@ -84,15 +85,38 @@ public class FilterResampler implements ResampleEngine {
         int dstHeight = dst.getHeight();
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();
-        int filterSize = (int)(2 * filter.radius());
-        int iSrc,jSrc,mflt,nflt,k;
+        double filterSizeX = filter.radius() * (srcWidth / dstWidth) < 1 ? filter.radius() : filter.radius() * (srcWidth / dstWidth);
+        double filterSizeY = filter.radius() * (srcHeight / dstHeight) < 1 ? filter.radius() : filter.radius() * (srcHeight / dstHeight);
+        double scaleX = (right - left) / dst.getWidth();
+        double scaleY = (top - bottom) / dst.getHeight();
+        for (int iyDst = 0; iyDst < dstHeight; iyDst++) {
+            for (int ixDst = 0; ixDst < dstWidth; ixDst++) {
+                //double xPos = (left + ixDst) <= srcWidth - 1 ? (left + ixDst) : srcWidth - 1;
+                //double yPos = (bottom + iyDst) <= srcHeight -1  ? (bottom + iyDst) : srcHeight - 1;
+                double xPos = left + ixDst * scaleX;
+                double yPos = bottom + iyDst * scaleY;
+                int i;
+                int j;
+                double value0 = 0, value1 = 0, value2 = 0;
 
-        for (iSrc = 0; iSrc < srcWidth; iSrc++){
-            for (jSrc = 0; jSrc < srcHeight; jSrc++){
-                float [] filter_temp = new float[filterSize];
-                for (mflt = 0; mflt < filterSize; mflt++){
-
+                for (i = (int) Math.ceil(xPos - filterSizeX); i <= Math.floor(xPos + filterSizeX); i++) {
+                    for (j = (int) Math.ceil(yPos - filterSizeY); j <= Math.floor(yPos + filterSizeY); j++) {
+                        int tempi = Math.max(0, Math.min(i, srcWidth - 1));
+                        int tempj = Math.max(0, Math.min(j, srcHeight - 1));
+                        value0 += (double) filter.evaluate((float) (i - xPos)) * (double) filter.evaluate((float) (j - yPos))
+                                * (src.getPixel(tempi, tempj, 0) & 0xff);
+                        value1 += (double) filter.evaluate((float) (i - xPos)) * (double) filter.evaluate((float) (j - yPos))
+                                * (src.getPixel(tempi, tempj, 1) & 0xff);
+                        value2 += (double) filter.evaluate((float) (i - xPos)) * (double) filter.evaluate((float) (j - yPos))
+                                * (src.getPixel(tempi, tempj, 2) & 0xff);
+                    }
                 }
+                value0 = Math.min(255, Math.max(0, value0));
+                value1 = Math.min(255, Math.max(0, value1));
+                value2 = Math.min(255, Math.max(0, value2));
+                dst.setPixel(ixDst, iyDst, 0, (byte) value0);
+                dst.setPixel(ixDst, iyDst, 1, (byte) value1);
+                dst.setPixel(ixDst, iyDst, 2, (byte) value2);
             }
         }
     }
