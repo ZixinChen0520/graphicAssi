@@ -18,22 +18,22 @@ public class LinearResampler implements ResampleEngine {
         int srcHeight = src.getHeight();
         for (int iyDst = 0; iyDst < dstHeight; iyDst++) {
             for (int ixDst = 0; ixDst < dstWidth; ixDst++) {
-                double xPos = (left + ixDst) % srcWidth;
-                double yPos = (bottom + iyDst) % srcHeight;
-                if (xPos < 0) xPos += srcWidth;
-                if (yPos < 0) yPos += srcHeight;
+                double xPos = (left + ixDst) <= srcWidth - 1 ? (left + ixDst) : srcWidth - 1;
+                double yPos = (bottom + iyDst) <= srcHeight - 1 ? (bottom + iyDst) : srcHeight - 1;
+                if (xPos < 0) xPos = 0;
+                if (yPos < 0) yPos = 0;
                 int leftBottom0 = src.getPixel((int) Math.floor(xPos), (int) Math.floor(yPos), 0) & 0xff;
                 int leftBottom1 = src.getPixel((int) Math.floor(xPos), (int) Math.floor(yPos), 1) & 0xff;
                 int leftBottom2 = src.getPixel((int) Math.floor(xPos), (int) Math.floor(yPos), 2) & 0xff;
                 int rightBottom0 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.floor(yPos), 0) & 0xff;
                 int rightBottom1 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.floor(yPos), 1) & 0xff;
                 int rightBottom2 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.floor(yPos), 2) & 0xff;
-                int leftCeil0 = src.getPixel((int) Math.floor(xPos), (int) Math.min(Math.floor(yPos + 1), srcHeight), 0) & 0xff;
-                int leftCeil1 = src.getPixel((int) Math.floor(xPos), (int) Math.min(Math.floor(yPos + 1), srcHeight), 1) & 0xff;
-                int leftCeil2 = src.getPixel((int) Math.floor(xPos), (int) Math.min(Math.floor(yPos + 1), srcHeight), 2) & 0xff;
-                int rightCeil0 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.min(Math.floor(yPos + 1), srcHeight), 0) & 0xff;
-                int rightCeil1 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.min(Math.floor(yPos + 1), srcHeight), 1) & 0xff;
-                int rightCeil2 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.min(Math.floor(yPos + 1), srcHeight), 2) & 0xff;
+                int leftCeil0 = src.getPixel((int) Math.floor(xPos), (int) Math.min(Math.floor(yPos + 1), srcHeight - 1), 0) & 0xff;
+                int leftCeil1 = src.getPixel((int) Math.floor(xPos), (int) Math.min(Math.floor(yPos + 1), srcHeight - 1), 1) & 0xff;
+                int leftCeil2 = src.getPixel((int) Math.floor(xPos), (int) Math.min(Math.floor(yPos + 1), srcHeight - 1), 2) & 0xff;
+                int rightCeil0 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.min(Math.floor(yPos + 1), srcHeight - 1), 0) & 0xff;
+                int rightCeil1 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.min(Math.floor(yPos + 1), srcHeight - 1), 1) & 0xff;
+                int rightCeil2 = src.getPixel((int) Math.min(Math.floor(xPos + 1), srcWidth-1), (int) Math.min(Math.floor(yPos + 1), srcHeight - 1), 2) & 0xff;
 
                 double leftBottomWeight = (Math.floor(xPos + 1) - xPos) * (Math.floor(yPos + 1) - yPos);
                 double rightBottomWeight = (xPos - Math.floor(xPos)) * (Math.floor(yPos + 1) - yPos);
