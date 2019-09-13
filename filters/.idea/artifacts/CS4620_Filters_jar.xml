@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CS4620 Filters:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CS4620_Filters_jar</output-path>
+    <root id="archive" name="CS4620 Filters.jar">
+      <element id="module-output" name="CS4620 Filters" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-tinyexr-natives-windows.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-natives-macos.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-glfw-natives-macos.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-tinyexr-natives-macos.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-natives-windows.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-stb-natives-macos.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-stb.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-stb-natives-windows.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-opengl.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-opengl-natives-macos.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-opengl-natives-windows.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-tinyexr.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-glfw.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jars/lwjgl-glfw-natives-windows.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
