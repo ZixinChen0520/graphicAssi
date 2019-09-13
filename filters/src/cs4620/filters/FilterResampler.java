@@ -92,6 +92,8 @@ public class FilterResampler implements ResampleEngine {
         float tempY0 = 0F;
         float tempY1 = 0F;
         float tempY2 = 0F;
+        final float stepX = (float) ((right - left)/dstWidth);
+        final float stepY = (float) ((top - bottom)/dstHeight);
 
         for (iDst = 0; iDst < dstWidth; iDst++){
             for (jDst = 0; jDst < dstHeight; jDst++){
@@ -101,12 +103,29 @@ public class FilterResampler implements ResampleEngine {
                 for (mflt = 0; mflt < filterSize; mflt++){
                     tempX0 = 0F; tempX1 = 0F; tempX2 = 0F;
                     for (nflt = 0; mflt < filterSize; nflt++){
-                        tempX0 += filter.evaluate((float) (Math.ceil(left + iDst - filter.radius() + nflt) - left - iDst))
-                                * src.getPixel((int)(Math.ceil(left + iDst - filter.radius()) + nflt), (int)(Math.ceil(bottom + jDst - filter.radius() + mflt)), 0);
-                        tempX1 += filter.evaluate((float) (Math.ceil(left + iDst - filter.radius() + nflt) - left - iDst))
-                                * src.getPixel((int)(Math.ceil(left + iDst - filter.radius()) + nflt), (int)(Math.ceil(bottom + jDst - filter.radius() + mflt)), 1);
-                        tempX2 += filter.evaluate((float) (Math.ceil(left + iDst - filter.radius() + nflt) - left - iDst))
-                                * src.getPixel((int)(Math.ceil(left + iDst - filter.radius()) + nflt), (int)(Math.ceil(bottom + jDst - filter.radius() + mflt)), 2);
+                        int xPos, yPos;
+                        xPos = (int)(Math.ceil(left + iDst * stepX - filter.radius()) + nflt);
+                        yPos = (int)(Math.ceil(bottom + jDst * stepY - filter.radius() + mflt));
+                        // Boundary Conditions
+                        if (xPos > srcWidth - 1) {
+                            xPos = srcWidth - 1;
+                        }
+                        else if (xPos < 0) {
+                            xPos = 0;
+                        }
+                        if (yPos > srcHeight - 1) {
+                            yPos = srcWidth - 1;
+                        }
+                        else if (yPos < 0) {
+                            yPos = 0;
+                        }
+
+                        tempX0 += filter.evaluate((float) (-xPos + left + iDst * stepX))
+                                * src.getPixel(xPos, yPos, 0);
+                        tempX1 += filter.evaluate((float) (-xPos + left + iDst * stepX))
+                                * src.getPixel(xPos, yPos, 1);
+                        tempX2 += filter.evaluate((float) (-xPos + left + iDst * stepX))
+                                * src.getPixel(xPos, yPos, 2);
                     }
                     filterResultTemp0[mflt] = tempX0;
                     filterResultTemp1[mflt] = tempX1;
@@ -116,11 +135,11 @@ public class FilterResampler implements ResampleEngine {
                 tempY1 = 0F;
                 tempY2 = 0F;
                 for  (kflt = 0; kflt < filterSize; kflt++){
-                    tempY0 += filter.evaluate(filter.radius() + kflt)
+                    tempY0 += filter.evaluate(-(filter.radius() + kflt))
                             * filterResultTemp0[kflt];
-                    tempY1 += filter.evaluate(filter.radius() + kflt)
+                    tempY1 += filter.evaluate(-(filter.radius() + kflt))
                             * filterResultTemp1[kflt];
-                    tempY2 += filter.evaluate(filter.radius() + kflt)
+                    tempY2 += filter.evaluate(-(filter.radius() + kflt))
                             * filterResultTemp2[kflt];
                 }
                 dst.setPixel(iDst, jDst,0, (byte)tempY0);
