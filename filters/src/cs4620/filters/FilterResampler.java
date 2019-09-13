@@ -93,8 +93,8 @@ public class FilterResampler implements ResampleEngine {
         float tempY0 = 0F;
         float tempY1 = 0F;
         float tempY2 = 0F;
-        final float stepX = (float)dstWidth/(float)srcWidth;
-        final float stepY = (float)dstHeight/(float)srcHeight;
+        final float stepX = (float)(right - left)/(float)dstWidth;
+        final float stepY = (float)(top - bottom)/(float)dstHeight;
         float origRadius = filter.radius();
         // Set radius for the filter if spacing is larger than
         float radiusX = stepX <= 1 ? origRadius : stepX * origRadius;
@@ -111,8 +111,8 @@ public class FilterResampler implements ResampleEngine {
                     tempX0 = 0F; tempX1 = 0F; tempX2 = 0F;
 
                     for (nflt = 0; nflt < filterSize; nflt++){
-                        xPos = (int)(Math.ceil(iDst - radiusX + nflt));
-                        yPos = (int)(Math.ceil(jDst - radiusY + mflt));
+                        xPos = (int)(Math.ceil(left + iDst * stepX - radiusX + nflt));
+                        yPos = (int)(Math.ceil(bottom + jDst * stepY - radiusY + mflt));
                         // Boundary Conditions
                         if (xPos > srcWidth - 1) { xPos = srcWidth - 1; }
                         else if (xPos < 0) { xPos = 0; }
@@ -120,9 +120,9 @@ public class FilterResampler implements ResampleEngine {
                         if (yPos > srcHeight - 1) { yPos = srcWidth - 1; }
                         else if (yPos < 0) { yPos = 0; }
 
-                        tempX0 += filter.evaluate((float) (-(xPos + left) + iDst)) * (float)(src.getPixel(xPos, yPos, 0) & 0xff);
-                        tempX1 += filter.evaluate((float) (-(xPos + left) + iDst)) * (float)(src.getPixel(xPos, yPos, 1) & 0xff);
-                        tempX2 += filter.evaluate((float) (-(xPos + left) + iDst)) * (float)(src.getPixel(xPos, yPos, 2) & 0xff);
+                        tempX0 += filter.evaluate((float) (-(xPos - iDst)/stepX)) * (float)(src.getPixel(xPos, yPos, 0) & 0xff);
+                        tempX1 += filter.evaluate((float) (-(xPos - iDst)/stepX)) * (float)(src.getPixel(xPos, yPos, 1) & 0xff);
+                        tempX2 += filter.evaluate((float) (-(xPos - iDst)/stepX)) * (float)(src.getPixel(xPos, yPos, 2) & 0xff);
                     }
                     filterResultTemp0[mflt] = tempX0;
                     filterResultTemp1[mflt] = tempX1;
