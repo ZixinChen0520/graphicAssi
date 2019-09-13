@@ -16,10 +16,12 @@ public class LinearResampler implements ResampleEngine {
         int dstHeight = dst.getHeight();
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();
+        double scaleX = (right - left)/dstWidth;
+        double scaleY = (top - bottom)/dstHeight;
         for (int iyDst = 0; iyDst < dstHeight; iyDst++) {
             for (int ixDst = 0; ixDst < dstWidth; ixDst++) {
-                double xPos = (left + ixDst) <= srcWidth - 1 ? (left + ixDst) : srcWidth - 1;
-                double yPos = (bottom + iyDst) <= srcHeight - 1 ? (bottom + iyDst) : srcHeight - 1;
+                double xPos = (left + ixDst * scaleX) <= srcWidth - 1 ? (left + ixDst * scaleX) : srcWidth - 1;
+                double yPos = (bottom + iyDst * scaleY) <= srcHeight - 1 ? (bottom + iyDst * scaleY) : srcHeight - 1;
                 if (xPos < 0) xPos = 0;
                 if (yPos < 0) yPos = 0;
                 int leftBottom0 = src.getPixel((int) Math.floor(xPos), (int) Math.floor(yPos), 0) & 0xff;
